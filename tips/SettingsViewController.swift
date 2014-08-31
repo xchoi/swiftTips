@@ -10,10 +10,14 @@ import UIKit
 
 class SettingsViewController: UIViewController {
 
+    @IBOutlet weak var doneButton: UIButton!
+
     @IBOutlet weak var tipControl: UISegmentedControl!
 
+    @IBOutlet weak var themeControl: UISegmentedControl!
 
-    @IBOutlet weak var doneButton: UIButton!
+    @IBOutlet weak var tipLabel: UILabel!
+    @IBOutlet weak var themeLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +25,11 @@ class SettingsViewController: UIViewController {
         var defaults = NSUserDefaults.standardUserDefaults()
         var selectedTipIndex = defaults.integerForKey("defaultTip")
         tipControl.selectedSegmentIndex = selectedTipIndex
+
+        var selectedThemeIndex = defaults.integerForKey("themeIndex")
+        themeControl.selectedSegmentIndex = selectedThemeIndex
+
+        self.themeChanged(self)
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,6 +40,7 @@ class SettingsViewController: UIViewController {
     override func viewWillDisappear(animated: Bool) {
         var defaults = NSUserDefaults.standardUserDefaults()
         defaults.setInteger(tipControl.selectedSegmentIndex, forKey: "defaultTip")
+        defaults.setInteger(themeControl.selectedSegmentIndex, forKey: "themeIndex")
         defaults.synchronize()
     }
 
@@ -38,4 +48,18 @@ class SettingsViewController: UIViewController {
         self.dismissViewControllerAnimated(true, nil)
     }
 
+    @IBAction func themeChanged(sender: AnyObject) {
+        switch (themeControl.selectedSegmentIndex) {
+        case 0:
+            self.view.backgroundColor = .whiteColor()
+            tipLabel.textColor = .blackColor()
+            themeLabel.textColor = .blackColor()
+        case 1:
+            self.view.backgroundColor = .blackColor()
+            tipLabel.textColor = .whiteColor()
+            themeLabel.textColor = .whiteColor()
+        default:
+            println("warning: segment control too large")
+        }
+    }
 }

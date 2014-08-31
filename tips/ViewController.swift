@@ -10,31 +10,31 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var billAmountLabel: UILabel!
     @IBOutlet weak var billField: UITextField!
 
+    @IBOutlet weak var tipTextLabel: UILabel!
     @IBOutlet weak var tipLabel: UILabel!
 
+    @IBOutlet weak var dividerView: UIView!
+
+    @IBOutlet weak var totalTextLabel: UILabel!
     @IBOutlet weak var totalLabel: UILabel!
 
     @IBOutlet weak var tipControl: UISegmentedControl!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
 
         tipLabel.text = "$0.00"
         totalLabel.text = "$0.00"
         billField.text = "0"
 
-        var defaults = NSUserDefaults.standardUserDefaults()
-        var selectedTipIndex = defaults.integerForKey("defaultTip")
-        tipControl.selectedSegmentIndex = selectedTipIndex
-
+        self.loadSettings()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     @IBAction func onEditingChanged(sender: AnyObject) {
@@ -55,6 +55,43 @@ class ViewController: UIViewController {
 
     @IBAction func onTap(sender: AnyObject) {
         view.endEditing(true)
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        loadSettings()
+    }
+
+    func loadSettings() {
+        var defaults = NSUserDefaults.standardUserDefaults()
+        var selectedTipIndex = defaults.integerForKey("defaultTip")
+        tipControl.selectedSegmentIndex = selectedTipIndex
+
+        var selectedTheme = defaults.integerForKey("themeIndex")
+
+        switch(selectedTheme) {
+        case 0:
+            self.view.backgroundColor   = .whiteColor()
+            billAmountLabel.textColor   = .blackColor()
+            billField.textColor         = .blackColor()
+            billField.backgroundColor   = .whiteColor()
+            tipTextLabel.textColor      = .blackColor()
+            tipLabel.textColor          = .blackColor()
+            dividerView.backgroundColor = .blackColor()
+            totalTextLabel.textColor    = .blackColor()
+            totalLabel.textColor        = .blackColor()
+        case 1:
+            self.view.backgroundColor   = .blackColor()
+            billAmountLabel.textColor   = .whiteColor()
+            billField.textColor         = .whiteColor()
+            billField.backgroundColor   = .blackColor()
+            tipTextLabel.textColor      = .whiteColor()
+            tipLabel.textColor          = .whiteColor()
+            dividerView.backgroundColor = .whiteColor()
+            totalTextLabel.textColor    = .whiteColor()
+            totalLabel.textColor        = .whiteColor()
+        default:
+            println("invalid theme stored")
+        }
     }
 }
 
