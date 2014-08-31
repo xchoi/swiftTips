@@ -42,9 +42,8 @@ class ViewController: UIViewController {
         
         var tipPercentage = tipPercentages[tipControl.selectedSegmentIndex]
         
-        var billAmount = NSString(string: billField.text).doubleValue
-        var tip = billAmount * tipPercentage
-        var total = billAmount + tip
+        var tip = billAmount() * tipPercentage
+        var total = billAmount() + tip
         
         var formatter = NSNumberFormatter()
         formatter.numberStyle = .CurrencyStyle
@@ -61,13 +60,26 @@ class ViewController: UIViewController {
         loadSettings()
     }
 
+    func billAmount() -> Double {
+        return NSString(string: billField.text).doubleValue
+    }
+
     func loadSettings() {
         var defaults = NSUserDefaults.standardUserDefaults()
+
         var selectedTipIndex = defaults.integerForKey("defaultTip")
         tipControl.selectedSegmentIndex = selectedTipIndex
 
-        var selectedTheme = defaults.integerForKey("themeIndex")
+        if let lastAppShutdown = defaults.objectForKey("lastTimeQuit") as? NSDate {
+            var timeSinceShutdown = NSDate.date().timeIntervalSinceNow
+            if (floor(timeSinceShutdown/60) < 10) {
+                var lastBillAmount = defaults.doubleForKey("lastBillAmount")
+                var formatter = NSNumberFormatter()
+                billField.text = formatter.stringFromNumber(lastBillAmount)
+            }
+        }
 
+        var selectedTheme = defaults.integerForKey("themeIndex")
         switch(selectedTheme) {
         case 0:
             self.view.backgroundColor   = .whiteColor()

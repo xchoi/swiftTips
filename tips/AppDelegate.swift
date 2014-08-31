@@ -38,6 +38,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillTerminate(application: UIApplication!) {
+        var defaults = NSUserDefaults.standardUserDefaults()
+
+        if let childControllers = self.window?.rootViewController.childViewControllers {
+            for controller in childControllers {
+                if controller is ViewController {
+                    defaults.setDouble((controller as ViewController).billAmount(), forKey: "lastBillAmount")
+                    defaults.setObject(NSDate.date(), forKey: "lastTimeQuit")
+                }
+            }
+        }
+
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
